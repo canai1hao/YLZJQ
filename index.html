@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>芸麟子·静气·案例志 (含多媒体对比版)</title>
+
+  <style>
+    :root {
+      --primary-color: #1e3a8a;
+      --accent-color: #0d9488;
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --border-color: #e2e8f0;
+      --text-color: #334155;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: var(--bg-color); color: var(--text-color); padding: 20px; line-height: 1.5; }
+    .container { max-width: 1200px; margin: 0 auto; }
+
+    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: var(--primary-color); color: white; padding: 16px 20px; border-radius: 8px; }
+    header h1 { font-size: 20px; font-weight: 600; }
+
+    .main-grid { display: grid; grid-template-columns: 320px 1fr; gap: 20px; }
+    
+    /* 侧边栏与搜索 */
+    .sidebar { background: var(--card-bg); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); height: calc(100vh - 100px); display: flex; flex-direction: column; }
+    .search-box { width: 100%; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 10px; outline: none; }
+    .case-list { flex: 1; overflow-y: auto; margin-top: 10px; }
+    .case-item { padding: 10px; border-bottom: 1px solid var(--border-color); cursor: pointer; border-radius: 4px; transition: background 0.2s; }
+    .case-item:hover, .case-item.active { background: #eff6ff; }
+    .case-item .title { font-weight: bold; color: var(--primary-color); font-size: 14px; }
+    .case-item .meta { font-size: 11px; color: #64748b; margin-top: 4px; display: flex; justify-content: space-between; }
+    .case-item .tags { margin-top: 4px; display: flex; flex-wrap: wrap; gap: 4px; }
+    .tag-badge { font-size: 10px; background: #e0f2fe; color: #0369a1; padding: 1px 5px; border-radius: 3px; }
+
+    /* 主表单内容 */
+    .content-area { background: var(--card-bg); padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); height: calc(100vh - 100px); overflow-y: auto; }
+    
+    .section-card { border: 1px solid var(--border-color); border-radius: 6px; padding: 12px; margin-bottom: 15px; background: #fafafa; }
+    .section-title { font-size: 14px; font-weight: bold; color: var(--primary-color); border-left: 4px solid var(--accent-color); padding-left: 8px; margin-bottom: 10px; }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    
+    .form-group { margin-bottom: 8px; }
+    .form-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px; color: #475569; }
+    .input, textarea { width: 100%; padding: 6px 10px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 13px; outline: none; }
+    textarea { resize: vertical; min-height: 48px; }
+
+    /* 图像/视频对比样式 */
+    .media-compare-box { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; background: #fff; padding: 10px; border: 1px dashed var(--accent-color); border-radius: 6px; }
+    .media-card { text-align: center; background: #f1f5f9; padding: 8px; border-radius: 6px; }
+    .media-card h5 { font-size: 12px; color: #334155; margin-bottom: 6px; }
+    .media-preview { width: 100%; max-height: 240px; object-fit: contain; border-radius: 4px; background: #000; margin-top: 6px; display: none; }
+
+    /* 按钮组 */
+    .btn-group { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
+    .btn { padding: 8px 14px; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600; }
+    .btn-primary { background: var(--primary-color); color: white; }
+    .btn-accent { background: var(--accent-color); color: white; }
+    .btn-outline { background: white; border: 1px solid var(--border-color); color: var(--text-color); }
+    .btn-danger { background: #ef4444; color: white; }
+
+    @media (max-width: 768px) {
+      .main-grid { grid-template-columns: 1fr; }
+      .sidebar { height: 250px; }
+      .content-area { height: auto; }
+      .media-compare-box { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>🌿 芸麟子·静气·案例志 (评估/多媒体对比/复盘系统)</h1>
+    <div>
+      <button onclick="createNewCase()" class="btn btn-accent">+ 新增案例</button>
+    </div>
+  </header>
+
+  <div class="main-grid">
+    <!-- 侧边栏：检索与列表 -->
+    <div class="sidebar">
+      <input type="text" id="searchInput" class="search-box" placeholder="🔍 搜索关键词/部位/症状/标签..." oninput="filterCases()">
+      <div id="caseList" class="case-list"></div>
+    </div>
+
+    <!-- 主表单编辑区域 -->
+    <div class="content-area">
+      <div class="btn-group">
+        <button onclick="saveCase()" class="btn btn-primary">💾 保存当前案例</button>
+        <button onclick="exportToTxt()" class="btn btn-outline">📄 导出文本 (含图文排版)</button>
+        <button onclick="copyToClipboard()" class="btn btn-outline">📋 一键复制富文本(带图可贴群晖)</button>
+        <button onclick="deleteCase()" class="btn btn-danger" style="margin-left: auto;">🗑️ 删除</button>
+      </div>
+
+      <form id="caseForm">
+        <!-- 基础信息 -->
+        <div class="section-card">
+          <div class="grid-3">
+            <div class="form-group">
+              <label>案例编号</label>
+              <input type="text" id="caseId" class="input" placeholder="例如：20260925-01">
+            </div>
+            <div class="form-group">
+              <label>日期</label>
+              <input type="date" id="caseDate" class="input">
+            </div>
+            <div class="form-group">
+              <label>案例名称</label>
+              <input type="text" id="caseName" class="input" placeholder="例如：右肩抬举受限伴受压疼痛">
+            </div>
+          </div>
+        </div>
+
+        <!-- 01 客户主诉 -->
+        <div class="section-card">
+          <div class="section-title">01｜客户主诉</div>
+          <div class="form-group">
+            <label>客户怎么描述自己的问题：</label>
+            <textarea id="symptomDesc" placeholder="客户原话描述..."></textarea>
+          </div>
+          <div class="grid-3">
+            <div class="form-group"><label>持续时间</label><input type="text" id="duration" class="input"></div>
+            <div class="form-group"><label>什么时候最明显</label><input type="text" id="peakTime" class="input"></div>
+            <div class="form-group"><label>什么动作/情况会出现</label><input type="text" id="triggerAction" class="input"></div>
+          </div>
+          <div class="form-group"><label>是否有既往类似问题</label><input type="text" id="history" class="input"></div>
+        </div>
+
+        <!-- 02 第一眼观察 -->
+        <div class="section-card">
+          <div class="section-title">02｜第一眼观察</div>
+          <div class="grid-3">
+            <div class="form-group"><label>体态</label><input type="text" id="posture" class="input"></div>
+            <div class="form-group"><label>动作</label><input type="text" id="movement" class="input"></div>
+            <div class="form-group"><label>左右差异</label><input type="text" id="sideDiff" class="input"></div>
+            <div class="form-group"><label>呼吸</label><input type="text" id="breathing" class="input"></div>
+            <div class="form-group"><label>明显代偿</label><input type="text" id="compensation" class="input"></div>
+            <div class="form-group"><label>其他异常</label><input type="text" id="otherAbnormal" class="input"></div>
+          </div>
+          <div class="form-group"><label>第一直觉</label><input type="text" id="firstIntuition" class="input"></div>
+        </div>
+
+        <!-- 03 初步判断 -->
+        <div class="section-card">
+          <div class="section-title">03｜初步判断</div>
+          <div class="grid-2">
+            <div class="form-group"><label>我认为问题可能来自</label><input type="text" id="possibleSource" class="input"></div>
+            <div class="form-group"><label>可能涉及</label><input type="text" id="possibleInvolve" class="input"></div>
+          </div>
+          <div class="form-group"><label>我为什么这么判断</label><textarea id="reasoning"></textarea></div>
+        </div>
+
+        <!-- 04 验证 -->
+        <div class="section-card">
+          <div class="section-title">04｜验证 (不直接处理，先测试)</div>
+          <div class="grid-3" style="border-bottom: 1px dashed #cbd5e1; padding-bottom: 8px; margin-bottom: 8px;">
+            <div class="form-group"><label>验证① 测试什么</label><input type="text" id="v1Test" class="input"></div>
+            <div class="form-group"><label>结果</label><input type="text" id="v1Result" class="input"></div>
+            <div class="form-group"><label>身体反馈</label><input type="text" id="v1Feedback" class="input"></div>
+          </div>
+          <div class="grid-3" style="border-bottom: 1px dashed #cbd5e1; padding-bottom: 8px; margin-bottom: 8px;">
+            <div class="form-group"><label>验证② 测试什么</label><input type="text" id="v2Test" class="input"></div>
+            <div class="form-group"><label>结果</label><input type="text" id="v2Result" class="input"></div>
+            <div class="form-group"><label>身体反馈</label><input type="text" id="v2Feedback" class="input"></div>
+          </div>
+          <div class="grid-3" style="margin-bottom: 8px;">
+            <div class="form-group"><label>验证③ 测试什么</label><input type="text" id="v3Test" class="input"></div>
+            <div class="form-group"><label>结果</label><input type="text" id="v3Result" class="input"></div>
+            <div class="form-group"><label>身体反馈</label><input type="text" id="v3Feedback" class="input"></div>
+          </div>
+          <div class="form-group"><label>验证之后，我的判断有没有改变？</label><input type="text" id="judgmentChanged" class="input"></div>
+        </div>
+
+        <!-- 05 处理 -->
+        <div class="section-card">
+          <div class="section-title">05｜处理</div>
+          <div class="grid-2">
+            <div class="form-group"><label>处理区域</label><input type="text" id="treatArea" class="input"></div>
+            <div class="form-group"><label>处理方式</label><input type="text" id="treatMethod" class="input"></div>
+            <div class="form-group"><label>工具/手法 (如：筋膜刀/松解)</label><input type="text" id="treatTool" class="input"></div>
+            <div class="form-group"><label>时间</label><input type="text" id="treatTime" class="input"></div>
+          </div>
+          <div class="form-group"><label>处理过程中身体反馈</label><input type="text" id="treatFeedback" class="input"></div>
+        </div>
+
+        <!-- 🖼️ 📸 新增模块：照片 & 视频对比影像库 -->
+        <div class="section-card" style="border: 2px solid var(--accent-color); background: #f0fdf4;">
+          <div class="section-title" style="color: #0d9488;">📸 视觉对比库 (照片 & 视频对比)</div>
+          
+          <!-- 照片对比 -->
+          <div class="form-group">
+            <label style="font-weight: bold;">1. 评估体态/动作图片对比：</label>
+            <div class="media-compare-box">
+              <div class="media-card">
+                <h5>🔴 处理前 (Before)</h5>
+                <input type="file" accept="image/*" onchange="previewMedia(this, 'imgBefore')" class="input">
+                <img id="imgBefore" class="media-preview">
+              </div>
+              <div class="media-card">
+                <h5>🟢 处理后 (After)</h5>
+                <input type="file" accept="image/*" onchange="previewMedia(this, 'imgAfter')" class="input">
+                <img id="imgAfter" class="media-preview">
+              </div>
+            </div>
+          </div>
+
+          <!-- 视频对比/链接 -->
+          <div class="form-group" style="margin-top: 15px;">
+            <label style="font-weight: bold;">2. 动态测试视频对比 (本地上传预览或群晖Synology Photos链接)：</label>
+            <div class="media-compare-box">
+              <div class="media-card">
+                <h5>🔴 处理前视频</h5>
+                <input type="file" accept="video/*" onchange="previewMedia(this, 'videoBefore')" class="input">
+                <video id="videoBefore" class="media-preview" controls></video>
+              </div>
+              <div class="media-card">
+                <h5>🟢 处理后视频</h5>
+                <input type="file" accept="video/*" onchange="previewMedia(this, 'videoAfter')" class="input">
+                <video id="videoAfter" class="media-preview" controls></video>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-top: 10px;">
+            <label>🔗 群晖 Photos / 云端原画视频链接（备忘用）：</label>
+            <input type="text" id="synologyLink" class="input" placeholder="粘贴群晖照片/视频的外链地址，方便随时点击观看超高清版">
+          </div>
+        </div>
+
+        <!-- 06 即时复测 -->
+        <div class="section-card">
+          <div class="section-title">06｜即时复测</div>
+          <div class="grid-2">
+            <div class="form-group"><label>处理前状态</label><input type="text" id="beforeState" class="input"></div>
+            <div class="form-group"><label>处理后状态</label><input type="text" id="afterState" class="input"></div>
+            <div class="form-group"><label>动作变化</label><input type="text" id="actionChange" class="input"></div>
+            <div class="form-group"><label>疼痛/不适变化</label><input type="text" id="painChange" class="input"></div>
+            <div class="form-group"><label>活动范围变化</label><input type="text" id="romChange" class="input"></div>
+            <div class="form-group"><label>客户主观感受</label><input type="text" id="clientFeeling" class="input"></div>
+          </div>
+          <div class="form-group"><label>最关键的变化是什么？</label><input type="text" id="keyChange" class="input"></div>
+        </div>
+
+        <!-- 07 最终判断 -->
+        <div class="section-card">
+          <div class="section-title">07｜最终判断</div>
+          <div class="form-group"><label>这一次，我最终认为：</label><textarea id="finalConclusion"></textarea></div>
+          <div class="form-group"><label>真正影响结果的关键点：</label><textarea id="keyPoint"></textarea></div>
+        </div>
+
+        <!-- 08 复盘 -->
+        <div class="section-card">
+          <div class="section-title">08｜复盘</div>
+          <div class="grid-2">
+            <div class="form-group"><label>这次我判断对在哪里？</label><input type="text" id="reviewRight" class="input"></div>
+            <div class="form-group"><label>哪一步最有价值？</label><input type="text" id="reviewValuable" class="input"></div>
+            <div class="form-group"><label>有没有判断错的地方？</label><input type="text" id="reviewWrong" class="input"></div>
+            <div class="form-group"><label>如果重新来一次，我会怎么做？</label><input type="text" id="reviewRedo" class="input"></div>
+          </div>
+          <div class="form-group"><label>这个案例让我新增了什么认识？</label><textarea id="reviewInsight"></textarea></div>
+        </div>
+
+        <!-- 09 下次遇到类似问题 -->
+        <div class="section-card">
+          <div class="section-title">09｜下次遇到类似问题</div>
+          <div class="grid-3">
+            <div class="form-group"><label>第一步会先看</label><input type="text" id="nextLook" class="input"></div>
+            <div class="form-group"><label>第一步会先验证</label><input type="text" id="nextVerify" class="input"></div>
+            <div class="form-group"><label>不会再直接做</label><input type="text" id="nextAvoid" class="input"></div>
+          </div>
+        </div>
+
+        <!-- 10 案例标签 -->
+        <div class="section-card">
+          <div class="section-title">10｜案例标签（检索关键词）</div>
+          <div class="grid-3">
+            <div class="form-group"><label>部位</label><input type="text" id="tagBody" class="input" placeholder="例：肩关节 / 腰椎"></div>
+            <div class="form-group"><label>症状</label><input type="text" id="tagSymptom" class="input" placeholder="例：受压痛 / 活动受限"></div>
+            <div class="form-group"><label>动作</label><input type="text" id="tagAction" class="input" placeholder="例：上举 / 外展"></div>
+            <div class="form-group"><label>可能关联</label><input type="text" id="tagRelation" class="input" placeholder="例：胸小肌紧张"></div>
+            <div class="form-group"><label>验证方式</label><input type="text" id="tagTest" class="input" placeholder="例：诱发测试"></div>
+            <div class="form-group"><label>处理方式</label><input type="text" id="tagTreat" class="input" placeholder="例：筋膜刀松解"></div>
+          </div>
+          <div class="form-group"><label>自定义标签 (用空格或逗号隔开)</label><input type="text" id="customTags" class="input" placeholder="#肩痛 #筋膜刀 #评估案例"></div>
+        </div>
+
+        <!-- 11 一句话总结 -->
+        <div class="section-card">
+          <div class="section-title">11｜一句话留下这个案例</div>
+          <div class="form-group">
+            <input type="text" id="oneSentence" class="input" style="font-weight: bold; color: #1e3a8a;" placeholder="例：肩痛不一定在肩，胸小肌松解后即刻改善抬举范围。">
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  let cases = JSON.parse(localStorage.getItem('yunlinzi_cases_v2') || '[]');
+  let currentId = null;
+
+  // 图像/视频 base64 暂存
+  let mediaStore = { imgBefore: '', imgAfter: '', videoBefore: '', videoAfter: '' };
+
+  const fields = [
+    'caseId', 'caseDate', 'caseName', 'symptomDesc', 'duration', 'peakTime', 'triggerAction', 'history',
+    'posture', 'movement', 'sideDiff', 'breathing', 'compensation', 'otherAbnormal', 'firstIntuition',
+    'possibleSource', 'possibleInvolve', 'reasoning',
+    'v1Test', 'v1Result', 'v1Feedback', 'v2Test', 'v2Result', 'v2Feedback', 'v3Test', 'v3Result', 'v3Feedback', 'judgmentChanged',
+    'treatArea', 'treatMethod', 'treatTool', 'treatTime', 'treatFeedback',
+    'synologyLink', 'beforeState', 'afterState', 'actionChange', 'painChange', 'romChange', 'clientFeeling', 'keyChange',
+    'finalConclusion', 'keyPoint',
+    'reviewRight', 'reviewValuable', 'reviewWrong', 'reviewRedo', 'reviewInsight',
+    'nextLook', 'nextVerify', 'nextAvoid',
+    'tagBody', 'tagSymptom', 'tagAction', 'tagRelation', 'tagTest', 'tagTreat', 'customTags', 'oneSentence'
+  ];
+
+  window.onload = function() {
+    renderCaseList();
+    if (cases.length > 0) loadCase(cases[0].id);
+    else createNewCase();
+  };
+
+  // 媒体本地预览处理
+  function previewMedia(input, elementId) {
+    const file = input.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const el = document.getElementById(elementId);
+        el.src = e.target.result;
+        el.style.display = 'block';
+        mediaStore[elementId] = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  function createNewCase() {
+    currentId = 'case_' + Date.now();
+    document.getElementById('caseForm').reset();
+    document.getElementById('caseDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('caseId').value = 'CASE-' + String(cases.length + 1).padStart(3, '0');
+    
+    // 清空媒体预览
+    ['imgBefore', 'imgAfter', 'videoBefore', 'videoAfter'].forEach(id => {
+      const el = document.getElementById(id);
+      el.src = '';
+      el.style.display = 'none';
+      mediaStore[id] = '';
+    });
+  }
+
+  function saveCase() {
+    let caseData = { id: currentId, media: { ...mediaStore } };
+    fields.forEach(f => {
+      let el = document.getElementById(f);
+      if (el) caseData[f] = el.value;
+    });
+
+    let index = cases.findIndex(c => c.id === currentId);
+    if (index > -1) cases[index] = caseData;
+    else cases.unshift(caseData);
+
+    try {
+      localStorage.setItem('yunlinzi_cases_v2', JSON.stringify(cases));
+      alert('✅ 案例及多媒体对比已保存成功！');
+      renderCaseList();
+    } catch (e) {
+      alert('⚠️ 提示：图片/视频较大，超出了浏览器本地存储限制。建议视频使用群晖 Synology Photos 外链进行关联！');
+    }
+  }
+
+  function renderCaseList(filterText = '') {
+    const listEl = document.getElementById('caseList');
+    listEl.innerHTML = '';
+
+    let filtered = cases.filter(c => JSON.stringify(c).toLowerCase().includes(filterText.toLowerCase()));
+
+    filtered.forEach(c => {
+      let div = document.createElement('div');
+      div.className = `case-item ${c.id === currentId ? 'active' : ''}`;
+      div.onclick = () => loadCase(c.id);
+
+      let hasMedia = (c.media && (c.media.imgBefore || c.media.videoBefore)) ? '📸 ' : '';
+      let tagsHtml = [c.tagBody, c.tagSymptom, c.tagTreat].filter(Boolean)
+        .map(t => `<span class="tag-badge">${t}</span>`).join('');
+
+      div.innerHTML = `
+        <div class="title">${hasMedia}${c.caseName || '未命名案例'}</div>
+        <div class="meta"><span>${c.caseId || ''}</span><span>${c.caseDate || ''}</span></div>
+        <div class="tags">${tagsHtml}</div>
+      `;
+      listEl.appendChild(div);
+    });
+  }
+
+  function loadCase(id) {
+    currentId = id;
+    let item = cases.find(c => c.id === id);
+    if (!item) return;
+
+    fields.forEach(f => {
+      let el = document.getElementById(f);
+      if (el) el.value = item[f] || '';
+    });
+
+    // 载入图片与视频
+    if (item.media) {
+      mediaStore = { ...item.media };
+      ['imgBefore', 'imgAfter', 'videoBefore', 'videoAfter'].forEach(mId => {
+        const el = document.getElementById(mId);
+        if (item.media[mId]) {
+          el.src = item.media[mId];
+          el.style.display = 'block';
+        } else {
+          el.src = '';
+          el.style.display = 'none';
+        }
+      });
+    }
+
+    renderCaseList(document.getElementById('searchInput').value);
+  }
+
+  function deleteCase() {
+    if (!confirm('确定要删除该案例吗？')) return;
+    cases = cases.filter(c => c.id !== currentId);
+    localStorage.setItem('yunlinzi_cases_v2', JSON.stringify(cases));
+    if (cases.length > 0) loadCase(cases[0].id);
+    else createNewCase();
+    renderCaseList();
+  }
+
+  function filterCases() {
+    renderCaseList(document.getElementById('searchInput').value);
+  }
+
+  function copyToClipboard() {
+    let getVal = id => document.getElementById(id)?.value || '无';
+    let imgB = mediaStore.imgBefore ? `<p><b>🔴 处理前照片：</b><br><img src="${mediaStore.imgBefore}" style="max-width:300px;"/></p>` : '';
+    let imgA = mediaStore.imgAfter ? `<p><b>🟢 处理后照片：</b><br><img src="${mediaStore.imgAfter}" style="max-width:300px;"/></p>` : '';
+    let link = getVal('synologyLink') !== '无' ? `<p><b>🔗 群晖云端高清视频链接：</b> <a href="${getVal('synologyLink')}">${getVal('synologyLink')}</a></p>` : '';
+
+    let htmlContent = `
+      <h2>【案例】${getVal('caseName')} (${getVal('caseId')})</h2>
+      <p><b>日期：</b>${getVal('caseDate')}</p>
+      <hr/>
+      <h3>01｜主诉与表现</h3>
+      <p><b>主诉：</b>${getVal('symptomDesc')}</p>
+      <p><b>体态观察：</b>${getVal('posture')} | <b>代偿：</b>${getVal('compensation')}</p>
+      
+      <h3>📸 视觉对比</h3>
+      ${imgB}
+      ${imgA}
+      ${link}
+
+      <h3>05｜处理与复测</h3>
+      <p><b>处理方式：</b>${getVal('treatMethod')} (${getVal('treatTool')})</p>
+      <p><b>即时变化：</b>${getVal('keyChange')}</p>
+
+      <h3>11｜总结</h3>
+      <p><b>💡 一句话总结：</b>${getVal('oneSentence')}</p>
+    `;
+
+    const blob = new Blob([htmlContent], { type: 'text/html' });
+    const data = [new ClipboardItem({ 'text/html': blob })];
+
+    navigator.clipboard.write(data).then(() => {
+      alert('📋 带图片的富文本已成功复制！可以直接 Ctrl+V 粘贴到群晖 Note Station 笔记中，图片也会顺带粘进去！');
+    });
+  }
+
+  function exportToTxt() {
+    let getVal = id => document.getElementById(id)?.value || '';
+    let txt = `案例编号：${getVal('caseId')}   日期：${getVal('caseDate')}   案例名称：${getVal('caseName')}
+主诉：${getVal('symptomDesc')}
+处理方式：${getVal('treatMethod')} (${getVal('treatTool')})
+关键变化：${getVal('keyChange')}
+群晖视频链接：${getVal('synologyLink')}
+一句话总结：${getVal('oneSentence')}
+`;
+    let blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+    let a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `${getVal('caseName') || '康复案例'}.txt`;
+    a.click();
+  }
+</script>
+
+</body>
+</html>
