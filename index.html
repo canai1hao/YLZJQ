@@ -3,71 +3,78 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>芸麟子·静气·案例志 (含多媒体对比版)</title>
-
+  <title>芸麟子·静气·案例志</title>
   <style>
     :root {
-      --primary-color: #1e3a8a;
-      --accent-color: #0d9488;
-      --bg-color: #f8fafc;
+      --primary: #1e3a8a;
+      --primary-light: #eff6ff;
+      --accent: #0d9488;
+      --accent-hover: #0f766e;
+      --bg: #f8fafc;
       --card-bg: #ffffff;
-      --border-color: #e2e8f0;
-      --text-color: #334155;
+      --border: #e2e8f0;
+      --text: #334155;
+      --danger: #ef4444;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: var(--bg-color); color: var(--text-color); padding: 20px; line-height: 1.5; }
-    .container { max-width: 1200px; margin: 0 auto; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); padding: 15px; line-height: 1.5; }
+    .container { max-width: 1280px; margin: 0 auto; }
 
-    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: var(--primary-color); color: white; padding: 16px 20px; border-radius: 8px; }
-    header h1 { font-size: 20px; font-weight: 600; }
+    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: var(--primary); color: white; padding: 14px 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    header h1 { font-size: 18px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
 
-    .main-grid { display: grid; grid-template-columns: 320px 1fr; gap: 20px; }
+    .main-grid { display: grid; grid-template-columns: 300px 1fr; gap: 15px; }
     
-    /* 侧边栏与搜索 */
-    .sidebar { background: var(--card-bg); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); height: calc(100vh - 100px); display: flex; flex-direction: column; }
-    .search-box { width: 100%; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 10px; outline: none; }
-    .case-list { flex: 1; overflow-y: auto; margin-top: 10px; }
-    .case-item { padding: 10px; border-bottom: 1px solid var(--border-color); cursor: pointer; border-radius: 4px; transition: background 0.2s; }
-    .case-item:hover, .case-item.active { background: #eff6ff; }
-    .case-item .title { font-weight: bold; color: var(--primary-color); font-size: 14px; }
-    .case-item .meta { font-size: 11px; color: #64748b; margin-top: 4px; display: flex; justify-content: space-between; }
-    .case-item .tags { margin-top: 4px; display: flex; flex-wrap: wrap; gap: 4px; }
-    .tag-badge { font-size: 10px; background: #e0f2fe; color: #0369a1; padding: 1px 5px; border-radius: 3px; }
+    /* 侧边栏 */
+    .sidebar { background: var(--card-bg); padding: 12px; border-radius: 8px; border: 1px solid var(--border); height: calc(100vh - 90px); display: flex; flex-direction: column; }
+    .search-box { width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 10px; font-size: 13px; outline: none; }
+    .search-box:focus { border-color: var(--accent); }
+    .case-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
+    .case-item { padding: 10px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; transition: all 0.2s; background: #fff; }
+    .case-item:hover, .case-item.active { background: var(--primary-light); border-color: var(--primary); }
+    .case-item .title { font-weight: bold; color: var(--primary); font-size: 13px; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; }
+    .case-item .meta { font-size: 11px; color: #64748b; display: flex; justify-content: space-between; }
+    .case-item .tags { margin-top: 4px; display: flex; flex-wrap: wrap; gap: 3px; }
+    .tag-badge { font-size: 10px; background: #e0f2fe; color: #0369a1; padding: 1px 4px; border-radius: 3px; }
 
-    /* 主表单内容 */
-    .content-area { background: var(--card-bg); padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); height: calc(100vh - 100px); overflow-y: auto; }
+    /* 表单内容区 */
+    .content-area { background: var(--card-bg); padding: 15px 20px; border-radius: 8px; border: 1px solid var(--border); height: calc(100vh - 90px); overflow-y: auto; }
     
-    .section-card { border: 1px solid var(--border-color); border-radius: 6px; padding: 12px; margin-bottom: 15px; background: #fafafa; }
-    .section-title { font-size: 14px; font-weight: bold; color: var(--primary-color); border-left: 4px solid var(--accent-color); padding-left: 8px; margin-bottom: 10px; }
+    /* 顶部操作栏 */
+    .action-bar { display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; align-items: center; background: #f1f5f9; padding: 8px; border-radius: 6px; }
+    .btn { padding: 7px 12px; border: none; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; transition: opacity 0.2s; }
+    .btn:hover { opacity: 0.9; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-accent { background: var(--accent); color: white; }
+    .btn-outline { background: white; border: 1px solid var(--border); color: var(--text); }
+    .btn-danger { background: var(--danger); color: white; margin-left: auto; }
+
+    /* 表单板块划分 */
+    .section-card { border: 1px solid var(--border); border-radius: 6px; padding: 12px; margin-bottom: 12px; background: #fafafa; }
+    .section-title { font-size: 13px; font-weight: bold; color: var(--primary); border-left: 3px solid var(--accent); padding-left: 8px; margin-bottom: 10px; }
 
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
     
-    .form-group { margin-bottom: 8px; }
-    .form-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px; color: #475569; }
-    .input, textarea { width: 100%; padding: 6px 10px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 13px; outline: none; }
-    textarea { resize: vertical; min-height: 48px; }
+    .form-group { margin-bottom: 6px; }
+    .form-group label { display: block; font-size: 11px; font-weight: 600; margin-bottom: 3px; color: #475569; }
+    .input, textarea { width: 100%; padding: 6px 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; outline: none; background: #fff; }
+    .input:focus, textarea:focus { border-color: var(--accent); }
+    textarea { resize: vertical; min-height: 42px; }
 
     /* 图像/视频对比样式 */
-    .media-compare-box { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; background: #fff; padding: 10px; border: 1px dashed var(--accent-color); border-radius: 6px; }
-    .media-card { text-align: center; background: #f1f5f9; padding: 8px; border-radius: 6px; }
-    .media-card h5 { font-size: 12px; color: #334155; margin-bottom: 6px; }
-    .media-preview { width: 100%; max-height: 240px; object-fit: contain; border-radius: 4px; background: #000; margin-top: 6px; display: none; }
-
-    /* 按钮组 */
-    .btn-group { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
-    .btn { padding: 8px 14px; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600; }
-    .btn-primary { background: var(--primary-color); color: white; }
-    .btn-accent { background: var(--accent-color); color: white; }
-    .btn-outline { background: white; border: 1px solid var(--border-color); color: var(--text-color); }
-    .btn-danger { background: #ef4444; color: white; }
+    .media-compare-box { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #fff; padding: 8px; border: 1px dashed var(--accent); border-radius: 6px; }
+    .media-card { text-align: center; background: #f8fafc; padding: 6px; border-radius: 4px; border: 1px solid var(--border); }
+    .media-card h5 { font-size: 11px; color: #334155; margin-bottom: 4px; }
+    .media-preview { width: 100%; max-height: 200px; object-fit: contain; border-radius: 4px; background: #000; margin-top: 4px; display: none; }
 
     @media (max-width: 768px) {
       .main-grid { grid-template-columns: 1fr; }
-      .sidebar { height: 250px; }
+      .sidebar { height: 200px; }
       .content-area { height: auto; }
-      .media-compare-box { grid-template-columns: 1fr; }
+      .grid-2, .grid-3, .media-compare-box { grid-template-columns: 1fr; }
+      .btn-danger { margin-left: 0; }
     }
   </style>
 </head>
@@ -75,26 +82,29 @@
 
 <div class="container">
   <header>
-    <h1>🌿 芸麟子·静气·案例志 (评估/多媒体对比/复盘系统)</h1>
-    <div>
-      <button onclick="createNewCase()" class="btn btn-accent">+ 新增案例</button>
-    </div>
+    <h1>🌿 芸麟子·静气·案例志 (结构化评估与对比系统)</h1>
+    <button type="button" onclick="createNewCase()" class="btn btn-accent">+ 新增案例</button>
   </header>
 
   <div class="main-grid">
     <!-- 侧边栏：检索与列表 -->
     <div class="sidebar">
-      <input type="text" id="searchInput" class="search-box" placeholder="🔍 搜索关键词/部位/症状/标签..." oninput="filterCases()">
+      <input type="text" id="searchInput" class="search-box" placeholder="🔍 搜索编号/部位/症状/标签..." oninput="filterCases()">
       <div id="caseList" class="case-list"></div>
     </div>
 
     <!-- 主表单编辑区域 -->
     <div class="content-area">
-      <div class="btn-group">
-        <button onclick="saveCase()" class="btn btn-primary">💾 保存当前案例</button>
-        <button onclick="exportToTxt()" class="btn btn-outline">📄 导出文本 (含图文排版)</button>
-        <button onclick="copyToClipboard()" class="btn btn-outline">📋 一键复制富文本(带图可贴群晖)</button>
-        <button onclick="deleteCase()" class="btn btn-danger" style="margin-left: auto;">🗑️ 删除</button>
+      <div class="action-bar">
+        <button type="button" onclick="saveCase()" class="btn btn-primary">💾 保存案例</button>
+        <button type="button" onclick="exportToJson()" class="btn btn-accent">📦 导出 JSON 备份</button>
+        <button type="button" onclick="copyJsonText()" class="btn btn-outline">📋 复制 JSON 源码</button>
+        <button type="button" onclick="triggerImport()" class="btn btn-outline">📥 导入 JSON 备份</button>
+        <input type="file" id="importJsonInput" accept=".json" style="display: none;" onchange="importFromJson(event)">
+        
+        <button type="button" onclick="exportToTxt()" class="btn btn-outline">📄 导出 TXT</button>
+        <button type="button" onclick="copyToClipboard()" class="btn btn-outline">📋 复制富文本(贴群晖)</button>
+        <button type="button" onclick="deleteCase()" class="btn btn-danger">🗑️ 删除</button>
       </div>
 
       <form id="caseForm">
@@ -158,17 +168,17 @@
         <!-- 04 验证 -->
         <div class="section-card">
           <div class="section-title">04｜验证 (不直接处理，先测试)</div>
-          <div class="grid-3" style="border-bottom: 1px dashed #cbd5e1; padding-bottom: 8px; margin-bottom: 8px;">
+          <div class="grid-3" style="border-bottom: 1px dashed #e2e8f0; padding-bottom: 6px; margin-bottom: 6px;">
             <div class="form-group"><label>验证① 测试什么</label><input type="text" id="v1Test" class="input"></div>
             <div class="form-group"><label>结果</label><input type="text" id="v1Result" class="input"></div>
             <div class="form-group"><label>身体反馈</label><input type="text" id="v1Feedback" class="input"></div>
           </div>
-          <div class="grid-3" style="border-bottom: 1px dashed #cbd5e1; padding-bottom: 8px; margin-bottom: 8px;">
+          <div class="grid-3" style="border-bottom: 1px dashed #e2e8f0; padding-bottom: 6px; margin-bottom: 6px;">
             <div class="form-group"><label>验证② 测试什么</label><input type="text" id="v2Test" class="input"></div>
             <div class="form-group"><label>结果</label><input type="text" id="v2Result" class="input"></div>
             <div class="form-group"><label>身体反馈</label><input type="text" id="v2Feedback" class="input"></div>
           </div>
-          <div class="grid-3" style="margin-bottom: 8px;">
+          <div class="grid-3" style="margin-bottom: 6px;">
             <div class="form-group"><label>验证③ 测试什么</label><input type="text" id="v3Test" class="input"></div>
             <div class="form-group"><label>结果</label><input type="text" id="v3Result" class="input"></div>
             <div class="form-group"><label>身体反馈</label><input type="text" id="v3Feedback" class="input"></div>
@@ -188,47 +198,45 @@
           <div class="form-group"><label>处理过程中身体反馈</label><input type="text" id="treatFeedback" class="input"></div>
         </div>
 
-        <!-- 🖼️ 📸 新增模块：照片 & 视频对比影像库 -->
-        <div class="section-card" style="border: 2px solid var(--accent-color); background: #f0fdf4;">
-          <div class="section-title" style="color: #0d9488;">📸 视觉对比库 (照片 & 视频对比)</div>
+        <!-- 📸 多媒体对比模块 -->
+        <div class="section-card" style="border: 2px solid var(--accent); background: #f0fdf4;">
+          <div class="section-title" style="color: var(--accent);">📸 视觉对比库 (照片 & 视频对比)</div>
           
-          <!-- 照片对比 -->
           <div class="form-group">
-            <label style="font-weight: bold;">1. 评估体态/动作图片对比：</label>
+            <label style="font-weight: bold;">1. 体态/动作照片对比 (本地上传将自动压缩保存)：</label>
             <div class="media-compare-box">
               <div class="media-card">
                 <h5>🔴 处理前 (Before)</h5>
-                <input type="file" accept="image/*" onchange="previewMedia(this, 'imgBefore')" class="input">
+                <input type="file" id="inputImgBefore" accept="image/*" onchange="processImage(this, 'imgBefore')" class="input">
                 <img id="imgBefore" class="media-preview">
               </div>
               <div class="media-card">
                 <h5>🟢 处理后 (After)</h5>
-                <input type="file" accept="image/*" onchange="previewMedia(this, 'imgAfter')" class="input">
+                <input type="file" id="inputImgAfter" accept="image/*" onchange="processImage(this, 'imgAfter')" class="input">
                 <img id="imgAfter" class="media-preview">
               </div>
             </div>
           </div>
 
-          <!-- 视频对比/链接 -->
-          <div class="form-group" style="margin-top: 15px;">
-            <label style="font-weight: bold;">2. 动态测试视频对比 (本地上传预览或群晖Synology Photos链接)：</label>
+          <div class="form-group" style="margin-top: 10px;">
+            <label style="font-weight: bold;">2. 动态视频预览：</label>
             <div class="media-compare-box">
               <div class="media-card">
                 <h5>🔴 处理前视频</h5>
-                <input type="file" accept="video/*" onchange="previewMedia(this, 'videoBefore')" class="input">
+                <input type="file" id="inputVideoBefore" accept="video/*" onchange="processVideo(this, 'videoBefore')" class="input">
                 <video id="videoBefore" class="media-preview" controls></video>
               </div>
               <div class="media-card">
                 <h5>🟢 处理后视频</h5>
-                <input type="file" accept="video/*" onchange="previewMedia(this, 'videoAfter')" class="input">
+                <input type="file" id="inputVideoAfter" accept="video/*" onchange="processVideo(this, 'videoAfter')" class="input">
                 <video id="videoAfter" class="media-preview" controls></video>
               </div>
             </div>
           </div>
 
           <div class="form-group" style="margin-top: 10px;">
-            <label>🔗 群晖 Photos / 云端原画视频链接（备忘用）：</label>
-            <input type="text" id="synologyLink" class="input" placeholder="粘贴群晖照片/视频的外链地址，方便随时点击观看超高清版">
+            <label>🔗 群晖 Photos / 云端高清原画视频链接：</label>
+            <input type="text" id="synologyLink" class="input" placeholder="粘贴群晖照片/视频的外链地址">
           </div>
         </div>
 
@@ -293,7 +301,7 @@
         <div class="section-card">
           <div class="section-title">11｜一句话留下这个案例</div>
           <div class="form-group">
-            <input type="text" id="oneSentence" class="input" style="font-weight: bold; color: #1e3a8a;" placeholder="例：肩痛不一定在肩，胸小肌松解后即刻改善抬举范围。">
+            <input type="text" id="oneSentence" class="input" style="font-weight: bold; color: var(--primary);" placeholder="例：肩痛不一定在肩，胸小肌松解后即刻改善抬举范围。">
           </div>
         </div>
       </form>
@@ -302,10 +310,9 @@
 </div>
 
 <script>
-  let cases = JSON.parse(localStorage.getItem('yunlinzi_cases_v2') || '[]');
+  const STORAGE_KEY = 'yunlinzi_cases_v3';
+  let cases = [];
   let currentId = null;
-
-  // 图像/视频 base64 暂存
   let mediaStore = { imgBefore: '', imgAfter: '', videoBefore: '', videoAfter: '' };
 
   const fields = [
@@ -322,42 +329,52 @@
   ];
 
   window.onload = function() {
+    try {
+      cases = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    } catch (e) {
+      cases = [];
+    }
     renderCaseList();
-    if (cases.length > 0) loadCase(cases[0].id);
-    else createNewCase();
+    if (cases.length > 0) {
+      loadCase(cases[0].id);
+    } else {
+      createNewCase();
+    }
   };
 
-  // 媒体本地预览处理
-  function previewMedia(input, elementId) {
-    const file = input.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const el = document.getElementById(elementId);
-        el.src = e.target.result;
-        el.style.display = 'block';
-        mediaStore[elementId] = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-  }
-
+  // 1. ✨ 核心修复：点击“+ 新增案例”时生成全新唯一 ID 并绑定
   function createNewCase() {
-    currentId = 'case_' + Date.now();
+    currentId = 'case_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
     document.getElementById('caseForm').reset();
+    
+    // 设置默认值
     document.getElementById('caseDate').value = new Date().toISOString().split('T')[0];
     document.getElementById('caseId').value = 'CASE-' + String(cases.length + 1).padStart(3, '0');
-    
-    // 清空媒体预览
+    document.getElementById('caseName').value = '';
+
+    // 清空媒体存储与预览视图
+    mediaStore = { imgBefore: '', imgAfter: '', videoBefore: '', videoAfter: '' };
     ['imgBefore', 'imgAfter', 'videoBefore', 'videoAfter'].forEach(id => {
       const el = document.getElementById(id);
-      el.src = '';
-      el.style.display = 'none';
-      mediaStore[id] = '';
+      if (el) { el.src = ''; el.style.display = 'none'; }
     });
+
+    // 清空 file input 的选中文件
+    ['inputImgBefore', 'inputImgAfter', 'inputVideoBefore', 'inputVideoAfter'].forEach(id => {
+      const inputEl = document.getElementById(id);
+      if (inputEl) inputEl.value = '';
+    });
+
+    // 高亮移除
+    renderCaseList();
   }
 
+  // 2. ✨ 核心修复：保存逻辑（根据 currentId 严格区分更新还是新增）
   function saveCase() {
+    if (!currentId) {
+      currentId = 'case_' + Date.now();
+    }
+
     let caseData = { id: currentId, media: { ...mediaStore } };
     fields.forEach(f => {
       let el = document.getElementById(f);
@@ -365,16 +382,155 @@
     });
 
     let index = cases.findIndex(c => c.id === currentId);
-    if (index > -1) cases[index] = caseData;
-    else cases.unshift(caseData);
+    if (index > -1) {
+      // 已存在，修改原案例
+      cases[index] = caseData;
+    } else {
+      // 新案例，插到顶部
+      cases.unshift(caseData);
+    }
 
     try {
-      localStorage.setItem('yunlinzi_cases_v2', JSON.stringify(cases));
-      alert('✅ 案例及多媒体对比已保存成功！');
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cases));
+      alert('✅ 案例保存成功！');
       renderCaseList();
     } catch (e) {
-      alert('⚠️ 提示：图片/视频较大，超出了浏览器本地存储限制。建议视频使用群晖 Synology Photos 外链进行关联！');
+      alert('⚠️ 警告：本地存储空间超限！视频文件太大了，建议视频改用【群晖云端外链】方式存储。');
     }
+  }
+
+  // 图片压缩处理
+  function processImage(input, targetId) {
+    const file = input.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = new Image();
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        const max_size = 800;
+
+        if (width > height) {
+          if (width > max_size) { height *= max_size / width; width = max_size; }
+        } else {
+          if (height > max_size) { width *= max_size / height; height = max_size; }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+        const el = document.getElementById(targetId);
+        el.src = compressedDataUrl;
+        el.style.display = 'block';
+        mediaStore[targetId] = compressedDataUrl;
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // 视频预览处理
+  function processVideo(input, targetId) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const el = document.getElementById(targetId);
+      el.src = e.target.result;
+      el.style.display = 'block';
+      mediaStore[targetId] = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // 📦 导出 JSON 备份
+  function exportToJson() {
+    if (!cases || cases.length === 0) {
+      alert('⚠️ 当前没有可导出的案例数据！请先创建并保存案例。');
+      return;
+    }
+
+    try {
+      const dataStr = JSON.stringify(cases, null, 2);
+      const fileName = `芸麟子案例库_全量备份_${new Date().toISOString().slice(0, 10)}.json`;
+      const urlTool = window.URL || window.webkitURL;
+
+      if (urlTool && typeof urlTool.createObjectURL === 'function') {
+        const blob = new Blob([dataStr], { type: 'application/json;charset=utf-8' });
+        const objectUrl = urlTool.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = objectUrl;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        urlTool.revokeObjectURL(objectUrl);
+      } else {
+        const encodedData = encodeURIComponent(dataStr);
+        const a = document.createElement('a');
+        a.href = 'data:application/json;charset=utf-8,' + encodedData;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
+    } catch (err) {
+      alert('导出遇到了问题：' + err.message + '\n\n您可以使用【📋 复制 JSON 源码】按钮保存。');
+    }
+  }
+
+  function copyJsonText() {
+    if (!cases || cases.length === 0) {
+      alert('⚠️ 当前没有案例数据！');
+      return;
+    }
+    const dataStr = JSON.stringify(cases, null, 2);
+    navigator.clipboard.writeText(dataStr).then(() => {
+      alert('📋 全量案例 JSON 源码已复制到剪贴板！可以直接新建 txt 粘贴保存。');
+    }).catch(err => {
+      prompt("复制失败，请手动全选复制下方 JSON 文本：", dataStr);
+    });
+  }
+
+  function triggerImport() {
+    document.getElementById('importJsonInput').click();
+  }
+
+  // 📥 导入 JSON 备份
+  function importFromJson(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const importedCases = JSON.parse(e.target.result);
+        if (Array.isArray(importedCases)) {
+          if (confirm(`📦 识别到 ${importedCases.length} 个案例，是否合并导入到现有案例库？`)) {
+            let idMap = new Map(cases.map(item => [item.id, item]));
+            importedCases.forEach(item => idMap.set(item.id, item));
+            cases = Array.from(idMap.values());
+
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(cases));
+            alert('✅ 数据恢复成功！');
+            renderCaseList();
+            if (cases.length > 0) loadCase(cases[0].id);
+          }
+        } else {
+          alert('⚠️ 文件格式不正确，非有效 JSON 案例文件！');
+        }
+      } catch (err) {
+        alert('⚠️ 文件解析错误：' + err.message);
+      }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
   }
 
   function renderCaseList(filterText = '') {
@@ -393,7 +549,7 @@
         .map(t => `<span class="tag-badge">${t}</span>`).join('');
 
       div.innerHTML = `
-        <div class="title">${hasMedia}${c.caseName || '未命名案例'}</div>
+        <div class="title"><span>${hasMedia}${c.caseName || '未命名案例'}</span></div>
         <div class="meta"><span>${c.caseId || ''}</span><span>${c.caseDate || ''}</span></div>
         <div class="tags">${tagsHtml}</div>
       `;
@@ -411,17 +567,18 @@
       if (el) el.value = item[f] || '';
     });
 
-    // 载入图片与视频
     if (item.media) {
       mediaStore = { ...item.media };
       ['imgBefore', 'imgAfter', 'videoBefore', 'videoAfter'].forEach(mId => {
         const el = document.getElementById(mId);
-        if (item.media[mId]) {
-          el.src = item.media[mId];
-          el.style.display = 'block';
-        } else {
-          el.src = '';
-          el.style.display = 'none';
+        if (el) {
+          if (item.media[mId]) {
+            el.src = item.media[mId];
+            el.style.display = 'block';
+          } else {
+            el.src = '';
+            el.style.display = 'none';
+          }
         }
       });
     }
@@ -430,9 +587,9 @@
   }
 
   function deleteCase() {
-    if (!confirm('确定要删除该案例吗？')) return;
+    if (!confirm('确定要删除当前选中的案例吗？')) return;
     cases = cases.filter(c => c.id !== currentId);
-    localStorage.setItem('yunlinzi_cases_v2', JSON.stringify(cases));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(cases));
     if (cases.length > 0) loadCase(cases[0].id);
     else createNewCase();
     renderCaseList();
@@ -473,23 +630,29 @@
     const data = [new ClipboardItem({ 'text/html': blob })];
 
     navigator.clipboard.write(data).then(() => {
-      alert('📋 带图片的富文本已成功复制！可以直接 Ctrl+V 粘贴到群晖 Note Station 笔记中，图片也会顺带粘进去！');
+      alert('📋 带图富文本已成功复制！可以直接粘贴到群晖 Note Station 或 Word 中。');
     });
   }
 
   function exportToTxt() {
     let getVal = id => document.getElementById(id)?.value || '';
-    let txt = `案例编号：${getVal('caseId')}   日期：${getVal('caseDate')}   案例名称：${getVal('caseName')}
+    let txt = `====================================
+案例编号：${getVal('caseId')}   日期：${getVal('caseDate')}
+案例名称：${getVal('caseName')}
+====================================
 主诉：${getVal('symptomDesc')}
+第一眼观察：${getVal('posture')} | 代偿: ${getVal('compensation')}
+处理区域：${getVal('treatArea')}
 处理方式：${getVal('treatMethod')} (${getVal('treatTool')})
 关键变化：${getVal('keyChange')}
 群晖视频链接：${getVal('synologyLink')}
 一句话总结：${getVal('oneSentence')}
-`;
-    let blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+====================================`;
+    
+    let encodedData = encodeURIComponent(txt);
     let a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `${getVal('caseName') || '康复案例'}.txt`;
+    a.href = 'data:text/plain;charset=utf-8,' + encodedData;
+    a.download = `${getVal('caseName') || '案例'}_${getVal('caseId')}.txt`;
     a.click();
   }
 </script>
